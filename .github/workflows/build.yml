@@ -19,26 +19,12 @@ jobs:
     - name: Download sources and toolchain
       run: |
         git config --global --add safe.directory '*'
-        git clone -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
-        git -C padavan-ng checkout "$PADAVAN_COMMIT"
-        wget -qO- "$PADAVAN_TOOLCHAIN_URL" | tar -C padavan-ng --zstd -xf -
-    - name: Get config
-      run: |
-        if [[ -n "$PADAVAN_CONFIG" ]] && [ "$PADAVAN_CONFIG" != "build.config" ]; then
-          regex="^(https?|ftp|file)://"
-          if [[ "$PADAVAN_CONFIG" =~ $regex ]]; then
-            echo wget "$PADAVAN_CONFIG" -qO build.config
-          else
-            echo cp "$PADAVAN_CONFIG" build.config
-          fi
+        if [[ -n "$PADAVAN_COMMIT" ]] && [ "$PADAVAN_COMMIT" != "HEAD" ]; then
+          git clone -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
+          git -C padavan-ng checkout "$PADAVAN_COMMIT"
+        else
+          git clone --depth 1 -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
         fi
-        sed -i 's|\r$||g' build.config
-        . <(cat build.config)
-        for v in "${!CONFIG_@}"; do
-          echo "$v=${!v}" >> $GITHUB_ENV
-        done
-    - name: Install themes
-      run: |
         if [[ -n $PADAVAN_THEMES ]]; then
           git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
           cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
@@ -47,23 +33,37 @@ jobs:
             cp -r "themes/$theme-theme" padavan-ng/trunk/user/www/n56u_ribbon_fixed
           done
         fi
+        wget -qO- "$PADAVAN_TOOLCHAIN_URL" | tar -C padavan-ng --zstd -xf -
+    - name: Get config
+      run: |
+        if [[ -n "$PADAVAN_CONFIG" ]] && [ "$PADAVAN_CONFIG" != "build.config" ]; then
+          regex="^(https?|ftp|file)://"
+          if [[ "$PADAVAN_CONFIG" =~ $regex ]]; then
+            wget "$PADAVAN_CONFIG" -qO build.config
+          else
+            cp "$PADAVAN_CONFIG" build.config
+          fi
+        fi
+        sed -i 's|\r$||g' build.config
+        . <(cat build.config)
+        for v in "${!CONFIG_@}"; do
+          echo "$v=${!v}" >> $GITHUB_ENV
+        done
     - name: Run custom pre-build script
       run: '[[ -f pre-build.sh ]] && . pre-build.sh || :'
     - name: Build firmware
       run: |
         cp build.config padavan-ng/trunk/.config
-        pushd padavan-ng/trunk
-        ./clear_tree.sh
+        cd padavan-ng/trunk
         ./build_firmware.sh
-        popd
     - name: Run custom post-build script
       run: '[[ -f post-build.sh ]] && . post-build.sh || :'
     - name: Prepare artifacts
       run: |
         FW_FILE_NAME="$(find padavan-ng/trunk/images -type f -regextype posix-extended -iregex ".*\.(trx|bin)$" -printf "%T@\t%f\n" | sort -V | tail -1 | cut -f2)"
-        cp "padavan-ng/trunk/images/$FW_FILE_NAME" .
         echo "FW_FILE_NAME=$FW_FILE_NAME" >> $GITHUB_ENV
         echo "FW_NAME=${FW_FILE_NAME%.*}" >> $GITHUB_ENV
+        mv "padavan-ng/trunk/images/$FW_FILE_NAME" .
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:

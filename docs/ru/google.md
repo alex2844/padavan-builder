@@ -1,6 +1,6 @@
 [![github](https://img.shields.io/badge/GITHUB-builder-red.svg)](github.md)
 [![google](https://img.shields.io/badge/GOOGLE-builder-green.svg)](google.md)
-[![manual](https://img.shields.io/badge/MANUAL-builder-red.svg)](manual.md)
+[![localhost](https://img.shields.io/badge/LOCALHOST-builder-red.svg)](localhost.md)
 [![ru](https://img.shields.io/badge/lang-ru-green)](google.md)
 [![en](https://img.shields.io/badge/lang-en-white)](../en-US/google.md)
 
