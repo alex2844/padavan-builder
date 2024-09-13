@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 PADAVAN_REPO="https://gitlab.com/hadzhioglu/padavan-ng.git"
 PADAVAN_BRANCH="master"
 PADAVAN_COMMIT="HEAD"
 PADAVAN_TOOLCHAIN_URL="https://gitlab.com/api/v4/projects/hadzhioglu%2Fpadavan-ng/packages/generic/toolchain/latest/toolchain.tzst"
 PADAVAN_CONFIG="build.config"
-PADAVAN_CONFIG="padavan-ng/trunk/configs/templates/xiaomi/mi-4a_100m.config" # TMP
 
 PADAVAN_THEMES_REPO="https://gitlab.com/hadzhioglu/padavan-themes.git"
 #PADAVAN_THEMES_REPO="https://gitlab.com/hadzhioglu/padavan-themes-lite.git"
@@ -27,9 +27,8 @@ CLEANUP=true
 select_input=''
 select_list=()
 select_index=0
-container=""
+container=''
 
-set -euo pipefail
 handle_exit() {
 	set +euo pipefail
 	$container container exists "padavan-ng" && $container rm -f "padavan-ng" &>> /dev/null
@@ -58,6 +57,7 @@ cexec() {
 		if [ "$1" == "-w" ]; then
 			shift
 			work_dir=$1
+			shift
 		elif [ "$1" == "-c" ]; then
 			args+=("/bin/bash")
 		fi
@@ -69,13 +69,13 @@ cexec() {
 
 list() {
 	clear
+	i=0
 	if [[ "$select_input" == *"/"* ]]; then
 		templates="padavan-ng/trunk/configs/templates/*/*config"
 	else
 		templates="padavan-ng/trunk/configs/templates/*/"
 	fi
-	i=0
-	shopt -s nocasematch
+	# shopt -s nocasematch
 	for config in ${templates[@]}; do
 		if [ -r "$config" ]; then
 			model="${config#*templates/}"
@@ -91,8 +91,8 @@ list() {
 			fi
 		fi
 	done
-	shopt -u nocasematch
-	echo -n "Введите модель роутера: $select_input"
+	# shopt -u nocasematch
+	# echo -n "Введите модель роутера: $select_input"
 }
 
 prompt() {
@@ -130,8 +130,8 @@ prompt() {
 				fi
 			elif [[ "$char" == "$(printf '\177')" ]]; then
 				select_input="${select_input%?}"
-			else
-				select_input+="$char"
+			#else
+				#select_input+="$char"
 			fi
 			select_index=0
 		fi
@@ -168,7 +168,7 @@ else
 	cexec git -C padavan-ng clean -dfx
 	cexec git -C padavan-ng pull
 fi
-if [[ -n $PADAVAN_THEMES ]]; then
+if [[ ${#PADAVAN_THEMES[@]} -ne 0 ]]; then
 	cexec git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
 	cexec cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
 	for theme in $PADAVAN_THEMES; do
@@ -185,14 +185,13 @@ if [[ -n "$PADAVAN_CONFIG" ]] && [ "$PADAVAN_CONFIG" != "build.config" ]; then
 	else
 		cp "$PADAVAN_CONFIG" build.config
 	fi
-elif [ ! -f "build.config" ]; then
+elif [ ! -s "build.config" ]; then
 	prompt
 	cp "padavan-ng/trunk/configs/templates/$select_input.config" build.config
 fi
 source build.config
 
-# cexec cp build.config padavan-ng/trunk/.config
-cp build.config padavan-ng/trunk/.config
+cexec cp build.config padavan-ng/trunk/.config
 cexec -w /opt/padavan-ng/trunk ./build_firmware.sh
 
 FW_FILE_NAME="$(find padavan-ng/trunk/images -type f -regextype posix-extended -iregex ".*\.(trx|bin)$" -printf "%T@\t%f\n" | sort -V | tail -1 | cut -f2)"
@@ -202,7 +201,6 @@ mv "padavan-ng/trunk/images/$FW_FILE_NAME" .
 partitions=padavan-ng/trunk/configs/boards/$CONFIG_VENDOR/$CONFIG_FIRMWARE_PRODUCT_ID/partitions.config
 max_fw_size="$(cexec awk '/Firmware/ { getline; getline; sub(",", ""); print strtonum($2); }' "$partitions")"
 fw_size="$(stat -c %s "$FW_FILE_NAME")"
-echo "max_fw_size: $max_fw_size, fw_size: $fw_size"
 if ((fw_size > max_fw_size)); then
 	fw_size_fmtd="$(numfmt --grouping "$fw_size") bytes"
 	max_fw_size_fmtd="$(numfmt --grouping "$max_fw_size") bytes"
