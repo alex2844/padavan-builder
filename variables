@@ -16,5 +16,3 @@ PADAVAN_THEMES=(
 #  white
 #  yellow
 )
-
-CONTAINER_IMAGE="registry.gitlab.com/hadzhioglu/padavan-ng"
