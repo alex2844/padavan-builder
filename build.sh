@@ -1,28 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PADAVAN_REPO="https://gitlab.com/hadzhioglu/padavan-ng.git"
-PADAVAN_BRANCH="master"
-PADAVAN_COMMIT="HEAD"
-PADAVAN_TOOLCHAIN_URL="https://gitlab.com/api/v4/projects/hadzhioglu%2Fpadavan-ng/packages/generic/toolchain/latest/toolchain.tzst"
-PADAVAN_CONFIG="build.config"
-
-PADAVAN_THEMES_REPO="https://gitlab.com/hadzhioglu/padavan-themes.git"
-#PADAVAN_THEMES_REPO="https://gitlab.com/hadzhioglu/padavan-themes-lite.git"
-PADAVAN_THEMES_BRANCH="main"
-
-PADAVAN_THEMES=(
-#  blue
-#  blue2
-#  grey
-#  grey2
-#  white
-#  yellow
-)
-
-CONTAINER_IMAGE="registry.gitlab.com/hadzhioglu/padavan-ng"
-CONTAINER_APPIMAGE_URL="https://github.com/popsUlfr/podman-appimage/releases/download/v4.2.1-r1/podman-4.2.1-r1-x86_64.AppImage"
-CLEANUP=true
+: "${PADAVAN_REPO:=https://gitlab.com/hadzhioglu/padavan-ng.git}"
+: "${PADAVAN_BRANCH:=master}"
+: "${PADAVAN_COMMIT:=HEAD}"
+: "${PADAVAN_TOOLCHAIN_URL:=https://gitlab.com/api/v4/projects/hadzhioglu%2Fpadavan-ng/packages/generic/toolchain/latest/toolchain.tzst}"
+: "${PADAVAN_CONFIG:=build.config}"
+: "${PADAVAN_THEMES_REPO:=https://gitlab.com/hadzhioglu/padavan-themes.git}"
+: "${PADAVAN_THEMES_BRANCH:=main}"
+: "${PADAVAN_THEMES:=()}"
+: "${CONTAINER_IMAGE:=registry.gitlab.com/hadzhioglu/padavan-ng}"
+: "${CONTAINER_APPIMAGE_URL:=https://github.com/popsUlfr/podman-appimage/releases/download/v4.2.1-r1/podman-4.2.1-r1-x86_64.AppImage}"
+: "${CLEANUP:=true}"
+: "${EDITOR:=}"
 
 select_input=''
 select_list=()
@@ -140,6 +130,34 @@ prompt() {
 	clear
 }
 
+edit() {
+	local editors=('vim' 'vi' 'nano' 'open')
+	if [ -z "$EDITOR" ]; then
+		for editor in "${editors[@]}"; do
+			if command -v "$editor" > /dev/null; then
+				EDITOR=$editor
+				break
+			fi
+		done
+		if [ -z "$EDITOR" ]; then
+			desktop_file=$(xdg-mime query default text/plain || echo '')
+			if [ -n "$desktop_file" ]; then
+				EDITOR="gtk-launch $desktop_file"
+			else
+				read -p 'Enter the command to launch the editor: ' EDITOR
+			fi
+		fi
+	fi
+	if [ -n "$EDITOR" ]; then
+		timestamp=$(date +%s)
+		$EDITOR "$1"
+		if [[ $(($(date +%s) - timestamp)) -lt 1 ]]; then
+			sleep 1
+			read -p "Press Enter to continue..." next
+		fi
+	fi
+}
+
 if command -v "podman" 1>/dev/null; then
 	container="podman"
 else
@@ -168,13 +186,17 @@ else
 	cexec git -C padavan-ng clean -dfx
 	cexec git -C padavan-ng pull
 fi
-if [[ ${#PADAVAN_THEMES[@]} -ne 0 ]]; then
-	cexec git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
-	cexec cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
-	for theme in $PADAVAN_THEMES; do
-		echo "Installing $theme theme"
-		cexec cp -r "themes/$theme-theme" padavan-ng/trunk/user/www/n56u_ribbon_fixed
-	done
+
+if [[ -n $PADAVAN_THEMES ]]; then
+	IFS=' ' read -r -a PADAVAN_THEMES <<< "${PADAVAN_THEMES:1:-1}"
+	if [[ ${#PADAVAN_THEMES[@]} -ne 0 ]]; then
+		cexec git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
+		cexec cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
+		for theme in ${PADAVAN_THEMES[@]}; do
+			echo "Installing $theme theme"
+			cexec cp -r "themes/$theme-theme" padavan-ng/trunk/user/www/n56u_ribbon_fixed
+		done
+	fi
 fi
 cexec -c "wget -qO- '$PADAVAN_TOOLCHAIN_URL' | tar -C padavan-ng --zstd -xf -"
 
@@ -188,6 +210,10 @@ if [[ -n "$PADAVAN_CONFIG" ]] && [ "$PADAVAN_CONFIG" != "build.config" ]; then
 elif [ ! -s "build.config" ]; then
 	prompt
 	cp "padavan-ng/trunk/configs/templates/$select_input.config" build.config
+	read -p "Do you want to edit the configuration file? [y/N] " edit
+	if [ "$edit" == "y" ] || [ "$edit" == "Y" ]; then
+		edit build.config
+	fi
 fi
 source build.config
 

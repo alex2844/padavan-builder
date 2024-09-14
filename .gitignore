@@ -1,1 +1,4 @@
 padavan-ng
+podman*
+*.trx
+*.bin

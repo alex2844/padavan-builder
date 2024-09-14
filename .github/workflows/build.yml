@@ -25,10 +25,10 @@ jobs:
         else
           git clone --depth 1 -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
         fi
-        if [[ -n $PADAVAN_THEMES ]]; then
+        if [[ -n $PADAVAN_THEMES ]] && [[ ${#PADAVAN_THEMES[@]} -ne 0 ]]; then
           git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
           cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
-          for theme in $PADAVAN_THEMES; do
+          for theme in ${PADAVAN_THEMES[@]}; do
             echo "Installing $theme theme"
             cp -r "themes/$theme-theme" padavan-ng/trunk/user/www/n56u_ribbon_fixed
           done
