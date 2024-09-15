@@ -1,8 +1,8 @@
 # Padavan Builder
 
-##  Build Padavan firmware - easy!
+## Build Padavan firmware - easy!
 
-This project provides simple and convenient ways to build Padavan firmware for your router.  You can choose the method that suits you best:
+This project provides simple and convenient ways to build Padavan firmware for your router. You can choose the method that suits you best:
 
 * **Github Actions:** Automated build on Github servers. 
 * **Google Colab:** Build in the Google Colab cloud environment.
@@ -23,11 +23,11 @@ This project provides simple and convenient ways to build Padavan firmware for y
 
 ## Сборка прошивки Padavan - просто!
 
-Этот проект предлагает простые и удобные способы сборки прошивки Padavan для вашего роутера.  Вы можете выбрать подходящий для вас метод:
+Этот проект предлагает простые и удобные способы сборки прошивки Padavan для вашего роутера. Вы можете выбрать подходящий для вас метод:
 
-* **Github Actions:**  Автоматическая сборка на серверах Github.
-* **Google Colab:**  Сборка в облачной среде Google Colab. 
-* **Локальная сборка:**  Сборка на вашей Linux машине с помощью Docker или Podman.
+* **Github Actions:** Автоматическая сборка на серверах Github.
+* **Google Colab:** Сборка в облачной среде Google Colab. 
+* **Локальная сборка:** Сборка на вашей Linux машине с помощью Docker или Podman.
 
 ## Как начать?
 
@@ -40,3 +40,8 @@ This project provides simple and convenient ways to build Padavan firmware for y
 * [Сборка с помощью Github Actions](ru/github.md)
 * [Сборка с помощью Google Colab](ru/google.md)
 * [Сборка на локальной машине](ru/localhost.md)
+
+
+## Youtube
+| [![Youtube](https://img.youtube.com/vi/6Qlkx5JcQdg/0.jpg)](https://youtu.be/6Qlkx5JcQdg 'Github Actions') | [![Youtube](https://img.youtube.com/vi/hSdi5K50KlY/0.jpg)](https://youtu.be/hSdi5K50KlY 'Google Colab') | [![Youtube](https://img.youtube.com/vi/vdFtsq32Pxg/0.jpg)](https://youtu.be/vdFtsq32Pxg 'Local build')
+| --- | --- | ---
