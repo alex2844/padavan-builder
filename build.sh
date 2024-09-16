@@ -12,6 +12,7 @@ set -euo pipefail
 : "${CONTAINER_IMAGE:=registry.gitlab.com/hadzhioglu/padavan-ng}"
 : "${CONTAINER_APPIMAGE_URL:=https://github.com/popsUlfr/podman-appimage/releases/download/v4.2.1-r1/podman-4.2.1-r1-x86_64.AppImage}"
 : "${CLEANUP:=true}"
+: "${RESET:=true}"
 : "${EDITOR:=}"
 
 select_input=''
@@ -182,9 +183,11 @@ if [ ! -d "padavan-ng" ]; then
 		cexec git clone --depth 1 -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
 	fi
 else
-	cexec git -C padavan-ng reset --hard
-	cexec git -C padavan-ng clean -dfx
-	cexec git -C padavan-ng pull
+	if [[ "$RESET" == true ]]; then
+		cexec git -C padavan-ng reset --hard
+		cexec git -C padavan-ng clean -dfx
+		cexec git -C padavan-ng pull
+	fi
 fi
 
 if [[ -n $PADAVAN_THEMES ]]; then

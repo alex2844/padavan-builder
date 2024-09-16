@@ -42,6 +42,7 @@ This script allows you to build Padavan firmware on your local Linux machine, ut
        * **`CONTAINER_IMAGE`**: Docker image to use for building (default: `registry.gitlab.com/hadzhioglu/padavan-ng`).
        * **`CONTAINER_APPIMAGE_URL`**: URL of the Podman AppImage (default: `https://github.com/popsUlfr/podman-appimage/releases/download/v4.2.1-r1/podman-4.2.1-r1-x86_64.AppImage`).
        * **`CLEANUP`**: Whether to clean up temporary files after the build (default: `true`).
+       * **`RESET`**: Whether to reset the Padavan repository to the latest commit (по умолчанию: `true`).
        * **`EDITOR`**: Command to launch your preferred text editor (optional).
 
 3. **(Optional) Customize build settings:**

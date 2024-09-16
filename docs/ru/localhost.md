@@ -42,6 +42,7 @@
        * **`CONTAINER_IMAGE`**: Образ Docker, который будет использоваться для сборки (по умолчанию: `registry.gitlab.com/hadzhioglu/padavan-ng`).
        * **`CONTAINER_APPIMAGE_URL`**: URL-адрес Podman AppImage (по умолчанию: `https://github.com/popsUlfr/podman-appimage/releases/download/v4.2.1-r1/podman-4.2.1-r1-x86_64.AppImage`).
        * **`CLEANUP`**: Очищать ли временные файлы после сборки (по умолчанию: `true`).
+       * **`RESET`**: Сбросить ли репозиторий Padavan к последнему коммиту (по умолчанию: `true`).
        * **`EDITOR`**: Команда для запуска вашего предпочитаемого текстового редактора (опционально).
 
 3. **(Необязательно) Настройте параметры сборки:**
