@@ -14,18 +14,12 @@
 
 2. **Авторизуйтесь** в Google Colab.
 
-3. **Задайте переменные в разделе "Variables":**
-    * **REPO:** Ссылка на репозиторий Padavan (по умолчанию: `https://gitlab.com/hadzhioglu/padavan-ng.git`).
-    * **BRANCH:** Ветка репозитория (по умолчанию: `master`).
-    * **COMMIT:** Коммит для сборки (по умолчанию: `HEAD`).
-    * **TOOLCHAIN_URL:** Ссылка на файл toolchain (по умолчанию: `https://gitlab.com/api/v4/projects/hadzhioglu%2Fpadavan-ng/packages/generic/toolchain/latest/toolchain.tzst`).
+3. **Задайте переменные в разделе "Settings":**
+    * Описание переменных представлено в таблице [build.conf](conf.md).
     * **CONFIG:**
-        * Укажите **путь к файлу конфигурации (` .config`)** на вашем Google Drive, URL-адрес файла,
+        * Укажите **путь к файлу конфигурации (`.config`)** на вашем Google Drive, URL-адрес файла,
         * **или используйте путь из репозитория Padavan** (например, `padavan-ng/trunk/configs/templates/xiaomi/mi-4a_100m.config`),
         * **или оставьте пустым**, чтобы использовать `build.config`.
-    * **THEMES_REPO:** Ссылка на репозиторий с темами (по умолчанию: `https://gitlab.com/hadzhioglu/padavan-themes.git`).
-    * **THEMES_BRANCH:** Ветка репозитория с темами (по умолчанию: `main`).
-    * **THEMES:** Список тем через запятую (например, `blue,yellow`).
     * **ZIP:**
         * `download`: Скачать архив с прошивкой после сборки.
         * `save`: Сохранить архив с прошивкой на Google Drive.

@@ -14,18 +14,12 @@
 
 2. **Authorize** in Google Colab.
 
-3. **Set the variables in the "Variables" section:**
-    * **REPO:** Link to the Padavan repository (default: `https://gitlab.com/hadzhioglu/padavan-ng.git`).
-    * **BRANCH:** Repository branch (default: `master`).
-    * **COMMIT:** Commit to build (default: `HEAD`).
-    * **TOOLCHAIN_URL:** Link to the toolchain file (default: `https://gitlab.com/api/v4/projects/hadzhioglu%2Fpadavan-ng/packages/generic/toolchain/latest/toolchain.tzst`).
+3. **Set the variables in the "Settings" section:**
+    * For a description of the variables, see the table [build.conf](conf.md).
     * **CONFIG:**
-        * Specify the **path to the configuration file (` .config`)** on your Google Drive, URL of the file,
+        * Specify the **path to the configuration file (`.config`)** on your Google Drive, URL of the file,
         * **or use the path from the Padavan repository** (e.g. `padavan-ng/trunk/configs/templates/xiaomi/mi-4a_100m.config`),
         * **or leave it blank** to use `build.config`.
-    * **THEMES_REPO:** Link to the themes repository (default: `https://gitlab.com/hadzhioglu/padavan-themes.git`).
-    * **THEMES_BRANCH:** Branch of the themes repository (default: `main`).
-    * **THEMES:** Comma-separated list of themes (e.g. `blue,yellow`).
     * **ZIP:**
         * `download`: Download the firmware archive after building.
         * `save`: Save the firmware archive to Google Drive.
