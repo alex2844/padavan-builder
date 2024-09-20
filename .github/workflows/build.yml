@@ -6,64 +6,21 @@ jobs:
     runs-on: ubuntu-latest
     container: registry.gitlab.com/hadzhioglu/padavan-ng
     defaults: { run: { shell: bash } }
+    env:
+      BUILDER_DEPENDENCIES: false
+      BUILDER_CLEANUP: false
+      BUILDER_RESET: false
     steps:
     - uses: actions/checkout@v4
-    - name: Get variables
+    - name: Create post_build script
       run: |
-        sed -i 's|\r$||g' variables
-        . <(cat variables)
-        PADAVAN_THEMES="${PADAVAN_THEMES[*]}"
-        for v in "${!PADAVAN_@}"; do
+        echo '
+        for v in "${!CONFIG_@}" "${!FW_@}"; do
           echo "$v=${!v}" >> $GITHUB_ENV
         done
-    - name: Download sources and toolchain
-      run: |
-        git config --global --add safe.directory '*'
-        if [[ -n "$PADAVAN_COMMIT" ]] && [ "$PADAVAN_COMMIT" != "HEAD" ]; then
-          git clone -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
-          git -C padavan-ng checkout "$PADAVAN_COMMIT"
-        else
-          git clone --depth 1 -b "$PADAVAN_BRANCH" "$PADAVAN_REPO"
-        fi
-        if [[ -n $PADAVAN_THEMES ]] && [[ ${#PADAVAN_THEMES[@]} -ne 0 ]]; then
-          git clone --depth 1 -b "$PADAVAN_THEMES_BRANCH" "$PADAVAN_THEMES_REPO" themes
-          cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed
-          for theme in ${PADAVAN_THEMES[@]}; do
-            echo "Installing $theme theme"
-            cp -r "themes/$theme-theme" padavan-ng/trunk/user/www/n56u_ribbon_fixed
-          done
-        fi
-        wget -qO- "$PADAVAN_TOOLCHAIN_URL" | tar -C padavan-ng --zstd -xf -
-    - name: Get config
-      run: |
-        if [[ -n "$PADAVAN_CONFIG" ]] && [ "$PADAVAN_CONFIG" != "build.config" ]; then
-          regex="^(https?|ftp|file)://"
-          if [[ "$PADAVAN_CONFIG" =~ $regex ]]; then
-            wget "$PADAVAN_CONFIG" -qO build.config
-          else
-            cp "$PADAVAN_CONFIG" build.config
-          fi
-        fi
-        sed -i 's|\r$||g' build.config
-        . <(cat build.config)
-        for v in "${!CONFIG_@}"; do
-          echo "$v=${!v}" >> $GITHUB_ENV
-        done
-    - name: Run custom pre-build script
-      run: '[[ -f pre-build.sh ]] && . pre-build.sh || :'
+        ' >> post_build.sh
     - name: Build firmware
-      run: |
-        cp build.config padavan-ng/trunk/.config
-        cd padavan-ng/trunk
-        ./build_firmware.sh
-    - name: Run custom post-build script
-      run: '[[ -f post-build.sh ]] && . post-build.sh || :'
-    - name: Prepare artifacts
-      run: |
-        FW_FILE_NAME="$(find padavan-ng/trunk/images -type f -regextype posix-extended -iregex ".*\.(trx|bin)$" -printf "%T@\t%f\n" | sort -V | tail -1 | cut -f2)"
-        echo "FW_FILE_NAME=$FW_FILE_NAME" >> $GITHUB_ENV
-        echo "FW_NAME=${FW_FILE_NAME%.*}" >> $GITHUB_ENV
-        mv "padavan-ng/trunk/images/$FW_FILE_NAME" .
+      run: ./build.sh
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -71,15 +28,5 @@ jobs:
         retention-days: 7
         path: |
           ${{ env.FW_FILE_NAME }}
+          build.conf
           build.config
-    - name: Check firmware size
-      run: |
-        partitions=padavan-ng/trunk/configs/boards/$CONFIG_VENDOR/$CONFIG_FIRMWARE_PRODUCT_ID/partitions.config
-        max_fw_size="$(awk '/Firmware/ { getline; getline; sub(",", ""); print strtonum($2); }' "$partitions")"
-        fw_size="$(stat -c %s "$FW_FILE_NAME")"
-        if ((fw_size > max_fw_size)); then
-          fw_size_fmtd="$(numfmt --grouping "$fw_size") bytes"
-          max_fw_size_fmtd="$(numfmt --grouping "$max_fw_size") bytes"
-          echo "Firmware size ($fw_size_fmtd) exceeds max size ($max_fw_size_fmtd) for your target device"
-          exit 1
-        fi
