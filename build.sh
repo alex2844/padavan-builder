@@ -314,9 +314,9 @@ if [[ ! -d "padavan-ng/toolchain/out" ]]; then
 	cexec tar -C padavan-ng --zstd -xf "toolchain.tzst";
 fi
 
-if [[ -n ${PADAVAN_THEMES:-} ]]; then
+if [[ -n ${PADAVAN_THEMES:-} ]] && [[ -n ${PADAVAN_THEMES_REPO:-} ]]; then
 	echo "Installing themes...";
-	cexec git clone --depth 1 -b "${PADAVAN_THEMES_BRANCH}" "${PADAVAN_THEMES_REPO}" themes;
+	cexec git clone --depth 1 -b "${PADAVAN_THEMES_BRANCH:-main}" "${PADAVAN_THEMES_REPO}" themes;
 	cexec cp -r themes/common-theme themes/jquery.js padavan-ng/trunk/user/www/n56u_ribbon_fixed;
 	for theme in ${PADAVAN_THEMES[@]}; do
 		echo "Installing ${theme} theme";
