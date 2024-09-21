@@ -17,7 +17,7 @@
 
 ### Использование
 
-1. **Скачайте [скрипт сборки](../../raw/main/build.sh) и [файл конфигурации](../../raw/main/build.conf):**
+1. **Скачайте [скрипт сборки](../../../../raw/main/build.sh) и [файл конфигурации](../../../../raw/main/build.conf):**
     ```shell
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.conf

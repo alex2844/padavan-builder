@@ -17,7 +17,7 @@ This script allows you to build Padavan firmware on your local machine using Doc
 
 ### Usage
 
-1. **Download the [build script](../../raw/main/build.sh) and [configuration file](../../raw/main/build.conf):**
+1. **Download the [build script](../../../../raw/main/build.sh) and [configuration file](../../../../raw/main/build.conf):**
     ```shell
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.conf
