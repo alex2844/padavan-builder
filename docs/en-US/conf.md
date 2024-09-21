@@ -25,3 +25,6 @@
 | `BUILDER_CLEANUP` | Whether to clean up temporary files after the build. | `true` |
 | `BUILDER_RESET` | Whether to reset the Padavan repository to the latest commit before building. | `true` |
 | `BUILDER_EDITOR` | Command to launch your preferred text editor. |  |
+| `BUILDER_OUTPUT_DIRECTORY` | Directory to store the built firmware. | (current directory) |
+| `BUILDER_TEMP_DIRECTORY` | Directory to store temporary files. | (current directory) |
+| `BUILDER_CONFIG` | Path to the build configuration file. | build.conf |
