@@ -379,7 +379,7 @@ fi
 echo "Checking firmware size...";
 partitions="padavan-ng/trunk/configs/boards/${CONFIG_VENDOR}/${CONFIG_FIRMWARE_PRODUCT_ID}/partitions.config";
 max_fw_size="$(cexec awk '/Firmware/ { getline; getline; sub(",", ""); print strtonum($2); }' "$partitions")";
-fw_size="$(stat -c %s "${FW_FILE_NAME}")";
+fw_size="$(stat -c %s "${BUILDER_OUTPUT:-${__dirname}}/${FW_FILE_NAME}")";
 if ((fw_size > max_fw_size)); then
 	fw_size_fmtd="$(numfmt --grouping "${fw_size}") bytes";
 	max_fw_size_fmtd="$(numfmt --grouping "${max_fw_size}") bytes";
