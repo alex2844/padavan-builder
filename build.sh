@@ -267,7 +267,7 @@ if [[ -n ${BUILDER_TEMP_DIRECTORY:-} ]]; then
 fi
 
 if [[ -n "${CONTAINER_IMAGE:-}" ]]; then
-	if [[ -z "${COLAB_RELEASE_TAG:-}" ]] && [[ ! -d "/mnt/chromeos" ]] && [[ ! -f /.dockerenv ]] && [[ ! -f /run/.containerenv ]]; then
+	if [[ -z "${COLAB_RELEASE_TAG:-}" ]] && [[ ! -d "/mnt/chromeos" ]] && [[ ! -f "/etc/wsl.conf" ]] && [[ ! -f "/.dockerenv" ]] && [[ ! -f "/run/.containerenv" ]]; then
 		echo "Container initialization...";
 		if command -v "podman" 1>/dev/null; then
 			container="podman";
