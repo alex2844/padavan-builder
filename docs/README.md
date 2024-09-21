@@ -53,7 +53,15 @@ This project provides simple and convenient ways to build Padavan firmware for y
 * [Сборка с помощью Google Colab](ru/google.md)
 * [Сборка на локальной машине](ru/localhost.md)
 
-
 ## Youtube
-| [![Youtube](https://img.youtube.com/vi/6Qlkx5JcQdg/0.jpg)](https://youtu.be/6Qlkx5JcQdg 'Github Actions') | [![Youtube](https://img.youtube.com/vi/hSdi5K50KlY/0.jpg)](https://youtu.be/hSdi5K50KlY 'Google Colab') | [![Youtube](https://img.youtube.com/vi/vdFtsq32Pxg/0.jpg)](https://youtu.be/vdFtsq32Pxg 'Local build')
-| --- | --- | ---
+| [![Github Actions][github_img]][github_url] | [![Google Colab][google_img]][google_url]
+| [![Localhost Linux][linux_img]][linux_url] | [![Localhost Windows][windows_img]][windows_url]
+| --- | --- | -- | --
+[github_img]: https://img.youtube.com/vi/6Qlkx5JcQdg/0.jpg "Github Actions"
+[github_url]: https://youtu.be/6Qlkx5JcQdg
+[google_img]: https://img.youtube.com/vi/hSdi5K50KlY/0.jpg "Google Colab"
+[google_url]: https://youtu.be/hSdi5K50KlY
+[linux_img]: https://img.youtube.com/vi/vdFtsq32Pxg/0.jpg "Linux"
+[linux_url]: https://youtu.be/vdFtsq32Pxg
+[windows_img]: https://img.youtube.com/vi/NDYlXdCvy2I/0.jpg "Windows"
+[windows_url]: https://youtu.be/NDYlXdCvy2I
