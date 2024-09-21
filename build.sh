@@ -284,7 +284,7 @@ if [[ -n "${CONTAINER_IMAGE:-}" ]]; then
 				container="${PWD}/podman";
 			fi
 		fi
-		"${container}" run --rm -dt -v "${PWD}":/opt -w /opt --name "padavan-ng" "${CONTAINER_IMAGE}";
+		"${container}" run --rm -dt -v "${PWD}:/opt" -w /opt --name "padavan-ng" "${CONTAINER_IMAGE}";
 	fi
 fi
 
