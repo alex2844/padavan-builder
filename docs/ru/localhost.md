@@ -4,11 +4,11 @@
 [![ru](https://img.shields.io/badge/lang-ru-green)](localhost.md)
 [![en](https://img.shields.io/badge/lang-en-white)](../en-US/localhost.md)
 
-## Сборка прошивки Padavan локально на Linux
+## Сборка прошивки Padavan локально
 
 ### Описание
 
-Этот скрипт позволяет вам собрать прошивку Padavan на вашей локальной машине с Linux, используя Docker или Podman для создания единообразного окружения сборки.
+Этот скрипт позволяет вам собрать прошивку Padavan на вашей локальной машине, используя Docker или Podman для создания единообразного окружения сборки.
 
 ### Необходимые условия
 
@@ -17,8 +17,8 @@
 
 ### Использование
 
-1. **Скачайте скрипт сборки:**
-    ``` shell
+1. **Скачайте [скрипт сборки](../../raw/main/build.sh) и [файл конфигурации](../../raw/main/build.conf):**
+    ```shell
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.conf
     chmod +x build.sh
@@ -35,8 +35,14 @@
     * Вы можете найти шаблон конфигурации для вашего устройства в [репозитории прошивки](https://gitlab.com/hadzhioglu/padavan-ng/-/tree/master/trunk/configs/templates).
 
 4. **Запустите скрипт:**
-    ``` shell
+
+    **Linux/WSL:**
+    ```shell
     sudo ./build.sh
+    ```
+    **Docker:**
+    ```powershell
+    docker run -it --rm -v "${PWD}:/opt" -w /opt registry.gitlab.com/hadzhioglu/padavan-ng BUILDER_TEMP_DIRECTORY=/tmp ./build.sh
     ```
 
 5. **Получите прошивку:**
@@ -46,7 +52,7 @@
 
 Так как вы используете скрипт, размещенный на Github, вы можете легко обновить его до последней версии, скачав его заново:
 
-``` shell
+```shell
 wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
 ```
 

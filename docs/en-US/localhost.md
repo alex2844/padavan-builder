@@ -4,11 +4,11 @@
 [![ru](https://img.shields.io/badge/lang-ru-white)](../ru/localhost.md)
 [![en](https://img.shields.io/badge/lang-en-green)](localhost.md)
 
-## Build Padavan Firmware Locally on Linux
+## Build Padavan Firmware Locally
 
 ### Description
 
-This script allows you to build Padavan firmware on your local Linux machine, utilizing Docker or Podman to create a consistent build environment.
+This script allows you to build Padavan firmware on your local machine using Docker or Podman to create a consistent build environment.
 
 ### Prerequisites
 
@@ -17,8 +17,8 @@ This script allows you to build Padavan firmware on your local Linux machine, ut
 
 ### Usage
 
-1. **Download the build script:**
-    ``` shell
+1. **Download the [build script](../../raw/main/build.sh) and [configuration file](../../raw/main/build.conf):**
+    ```shell
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
     wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.conf
     chmod +x build.sh
@@ -35,8 +35,14 @@ This script allows you to build Padavan firmware on your local Linux machine, ut
     * You can find a template config for your device in the [firmware repository](https://gitlab.com/hadzhioglu/padavan-ng/-/tree/master/trunk/configs/templates).
 
 4. **Run the script:**
-    ``` shell
+
+    **Linux/WSL:**
+    ```shell
     sudo ./build.sh
+    ```
+    **Docker:**
+    ```powershell
+    docker run -it --rm -v "${PWD}:/opt" -w /opt registry.gitlab.com/hadzhioglu/padavan-ng BUILDER_TEMP_DIRECTORY=/tmp ./build.sh
     ```
 
 5. **Get the firmware:**
@@ -46,7 +52,7 @@ This script allows you to build Padavan firmware on your local Linux machine, ut
 
 Since you are using a script hosted on Github, you can easily update it to the latest version by downloading it again:
 
-``` shell
+```shell
 wget https://raw.githubusercontent.com/alex2844/padavan-builder/main/build.sh
 ```
 
