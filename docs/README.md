@@ -8,6 +8,12 @@ This project provides simple and convenient ways to build Padavan firmware for y
 * **Google Colab:** Build in the Google Colab cloud environment.
 * **Local build:** Build on your Linux machine using Docker or Podman.
 
+## File Description
+
+* **[`build.sh`](../build.sh):** Main script for building the firmware.
+* **[`build.conf`](../build.conf):** Build configuration file containing variables that define Padavan repository parameters, toolchain, Docker image, and other settings. For a description of the variables, see the table [build.conf](en-US/conf.md).
+* **[`build.config`](../build.config):** Padavan configuration file defining the firmware settings.
+
 ## Getting Started
 
 1. **Choose your preferred build method.**
@@ -28,6 +34,12 @@ This project provides simple and convenient ways to build Padavan firmware for y
 * **Github Actions:** Автоматическая сборка на серверах Github.
 * **Google Colab:** Сборка в облачной среде Google Colab. 
 * **Локальная сборка:** Сборка на вашей Linux машине с помощью Docker или Podman.
+
+## Описание файлов
+
+* **[`build.sh`](../build.sh):** Главный скрипт для сборки прошивки.
+* **[`build.conf`](../build.conf):** Файл конфигурации сборки. Содержит переменные, определяющие параметры репозитория Padavan, toolchain, Docker-образа и другие настройки. Описание переменных представлено в таблице [build.conf](ru/conf.md).
+* **[`build.config`](../build.config):** Файл конфигурации Padavan, определяющий настройки прошивки.
 
 ## Как начать?
 
