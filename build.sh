@@ -258,12 +258,12 @@ if [[ ! -f "toolchain.tzst" ]]; then
 	keys+=("PADAVAN_TOOLCHAIN_URL");
 fi
 if [[ -n ${BUILDER_CONFIG:-} ]]; then
-	cp "${BUILDER_CONFIG}" "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.conf";
+	cp "${BUILDER_CONFIG}" "${BUILDER_OUTPUT:-${__dirname}}/build.conf";
 fi
-config "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.conf" "${keys[@]}";
+config "${BUILDER_OUTPUT:-${__dirname}}/build.conf" "${keys[@]}";
 
-if [[ -n ${BUILDER_TEMP_DIRECTORY:-} ]]; then
-	cd "${BUILDER_TEMP_DIRECTORY}";
+if [[ -n ${BUILDER_TEMP:-} ]]; then
+	cd "${BUILDER_TEMP}";
 fi
 
 if [[ -n "${CONTAINER_IMAGE:-}" ]]; then
@@ -339,23 +339,23 @@ echo "Configuring build...";
 if [[ "${PADAVAN_CONFIG:-build.config}" != "build.config" ]]; then
 	regex="^(https?|ftp|file)://";
 	if [[ "$PADAVAN_CONFIG" =~ $regex ]]; then
-		wget "$PADAVAN_CONFIG" -qO "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config";
+		wget "$PADAVAN_CONFIG" -qO "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	else
-		cp "$PADAVAN_CONFIG" "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config";
+		cp "$PADAVAN_CONFIG" "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	fi
-elif [[ ! -s "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config" ]] || [[ -z $(cat "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config") ]]; then
+elif [[ ! -s "${BUILDER_OUTPUT:-${__dirname}}/build.config" ]] || [[ -z $(cat "${BUILDER_OUTPUT:-${__dirname}}/build.config") ]]; then
 	if [[ -n "${CONFIG_VENDOR:-}" ]] && [[ -n "${CONFIG_FIRMWARE_PRODUCT_ID:-}" ]]; then
-		cp "padavan-ng/trunk/configs/templates/${CONFIG_VENDOR,,}/${CONFIG_FIRMWARE_PRODUCT_ID,,}.config" "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config";
+		cp "padavan-ng/trunk/configs/templates/${CONFIG_VENDOR,,}/${CONFIG_FIRMWARE_PRODUCT_ID,,}.config" "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	else
 		prompt;
-		cp "padavan-ng/trunk/configs/templates/$select_input.config" "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config";
+		cp "padavan-ng/trunk/configs/templates/$select_input.config" "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	fi
 	read -p "Do you want to edit the configuration file? [y/N] " edit;
 	if [[ "${edit,,}" =~ ^y(es)?$ ]]; then
-		edit "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config";
+		edit "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	fi
 fi
-config "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config" "CONFIG_VENDOR CONFIG_FIRMWARE_PRODUCT_ID";
+config "${BUILDER_OUTPUT:-${__dirname}}/build.config" "CONFIG_VENDOR CONFIG_FIRMWARE_PRODUCT_ID";
 
 if [[ -f "pre_build.sh" ]]; then
 	echo "Run custom pre_build script...";
@@ -363,13 +363,13 @@ if [[ -f "pre_build.sh" ]]; then
 fi
 
 echo "Building firmware...";
-cexec cp "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/build.config" "padavan-ng/trunk/.config";
+cexec cp "${BUILDER_OUTPUT:-${__dirname}}/build.config" "padavan-ng/trunk/.config";
 cexec -w "padavan-ng/trunk" "./build_firmware.sh";
 
 echo "Moving firmware to the current directory...";
 FW_FILE_NAME="$(find padavan-ng/trunk/images -type f -regextype posix-extended -iregex ".*\.(trx|bin)$" -printf "%T@\t%f\n" | sort -V | tail -1 | cut -f2)";
 FW_NAME="${FW_FILE_NAME%.*}";
-mv "padavan-ng/trunk/images/${FW_FILE_NAME}" "${BUILDER_OUTPUT_DIRECTORY:-${__dirname}}/";
+mv "padavan-ng/trunk/images/${FW_FILE_NAME}" "${BUILDER_OUTPUT:-${__dirname}}/";
 
 if [[ -f "post_build.sh" ]]; then
 	echo "Run custom post_build script...";

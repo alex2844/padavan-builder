@@ -42,7 +42,7 @@
     ```
     **Docker:**
     ```powershell
-    docker run -it --rm -v "${PWD}:/opt" -w /opt registry.gitlab.com/hadzhioglu/padavan-ng BUILDER_TEMP_DIRECTORY=/tmp ./build.sh
+    docker run -it --rm -v "${PWD}:/opt" -w /opt -e BUILDER_TEMP=/tmp registry.gitlab.com/hadzhioglu/padavan-ng ./build.sh
     ```
 
 5. **Получите прошивку:**
