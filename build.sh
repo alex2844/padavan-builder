@@ -235,8 +235,11 @@ cexec() {
 		shift;
 	done
 	if [[ -n "${container}" ]]; then
-		if [[ -n "${work_dir}" ]] && ! [[ "${work_dir}" =~ ^/ ]]; then
-			work_dir="/opt/${work_dir}";
+		root="${BUILDER_TEMP:-${BUILDER_OUTPUT:-${__dirname}}}";
+		if [[ -z "${work_dir}" ]]; then
+			work_dir="${root}";
+		elif ! [[ "${work_dir}" =~ ^/ ]]; then
+			work_dir="${root}/${work_dir}";
 		fi
 		$container exec -w "$work_dir" "padavan-ng" "${args[@]}";
 	else
@@ -284,7 +287,7 @@ if [[ -n "${CONTAINER_IMAGE:-}" ]]; then
 				container="${PWD}/podman";
 			fi
 		fi
-		"${container}" run --rm -dt -v "${PWD}:/opt" -w /opt --name "padavan-ng" "${CONTAINER_IMAGE}";
+		"${container}" run -it --rm -dt -v "${BUILDER_TEMP:-/tmp}:${BUILDER_TEMP:-/tmp}" -v "${BUILDER_OUTPUT:-${__dirname}}:${BUILDER_OUTPUT:-${__dirname}}" -w "${BUILDER_OUTPUT:-${__dirname}}" --name "padavan-ng" "${CONTAINER_IMAGE}";
 	fi
 fi
 
