@@ -43,6 +43,7 @@ config() {
 	shift;
 	local keys=("$@");
 	if [[ -f "${file}" ]]; then
+		sed -i 's|\r$||g' "${file}";
 		while IFS== read -r line; do
 			if [[ "${line}" =~ ^#.* ]] || [[ -z "${line}" ]]; then
 				continue;
