@@ -57,8 +57,8 @@ This project provides simple and convenient ways to build Padavan firmware for y
 | [![github][github_img]][github_url] | [![google][google_img]][google_url] | [![linux][linux_img]][linux_url] | [![windows][windows_img]][windows_url]
 | --- | --- | --- | ---
 
-[github_img]: https://img.youtube.com/vi/6Qlkx5JcQdg/0.jpg "Github Actions"
-[github_url]: https://youtu.be/6Qlkx5JcQdg
+[github_img]: https://img.youtube.com/vi/O7T9An9bJNs/0.jpg "Github Actions"
+[github_url]: https://youtu.be/O7T9An9bJNs
 [google_img]: https://img.youtube.com/vi/hSdi5K50KlY/0.jpg "Google Colab"
 [google_url]: https://youtu.be/hSdi5K50KlY
 [linux_img]: https://img.youtube.com/vi/vdFtsq32Pxg/0.jpg "Local build: Linux"
