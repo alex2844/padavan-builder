@@ -16,7 +16,7 @@ jobs:
           filters: |
             changed:
               - '**'
-              - '!variables'
+              - '!build.conf'
               - '!build.config'
   close:
     needs: files
