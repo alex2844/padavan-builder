@@ -61,19 +61,24 @@ config() {
 	if [[ -n "${keys:-}" ]]; then
 		for key in ${keys[@]}; do
 			if ! [[ -v "${key}" ]]; then
-				while :; do
-					read -p "Please enter a value for the required parameter ${key}: " value;
-					if [[ -n "${value}" ]]; then
-						break;
-					else
-						echo "Error: ${key} cannot be empty. Please provide a value.";
+				if [[ -z "${GITHUB_ACTIONS:-}" ]]; then
+					while :; do
+						read -p "Please enter a value for the required parameter ${key}: " value;
+						if [[ -n "${value}" ]]; then
+							break;
+						else
+							echo "Error: ${key} cannot be empty. Please provide a value.";
+						fi
+					done
+					if [[ ! -f "${file}" ]]; then
+						touch "${file}";
 					fi
-				done
-				if [[ ! -f "${file}" ]]; then
-					touch "${file}";
+					export "${key}=${value}";
+					echo "${key}=${value}" >> "${file}";
+				else
+					echo "Error: ${key} cannot be empty. Please provide a value." >&2;
+					exit 1;
 				fi
-				export "${key}=${value}";
-				echo "${key}=${value}" >> "${file}";
 			fi
 		done
 	fi
@@ -350,13 +355,15 @@ if [[ "${PADAVAN_CONFIG:-build.config}" != "build.config" ]]; then
 elif [[ ! -s "${BUILDER_OUTPUT:-${__dirname}}/build.config" ]] || [[ -z $(cat "${BUILDER_OUTPUT:-${__dirname}}/build.config") ]]; then
 	if [[ -n "${CONFIG_VENDOR:-}" ]] && [[ -n "${CONFIG_FIRMWARE_PRODUCT_ID:-}" ]]; then
 		cp "padavan-ng/trunk/configs/templates/${CONFIG_VENDOR,,}/${CONFIG_FIRMWARE_PRODUCT_ID,,}.config" "${BUILDER_OUTPUT:-${__dirname}}/build.config";
-	else
+	elif [[ -z "${GITHUB_ACTIONS:-}" ]]; then
 		prompt;
 		cp "padavan-ng/trunk/configs/templates/$select_input.config" "${BUILDER_OUTPUT:-${__dirname}}/build.config";
 	fi
-	read -p "Do you want to edit the configuration file? [y/N] " edit;
-	if [[ "${edit,,}" =~ ^y(es)?$ ]]; then
-		edit "${BUILDER_OUTPUT:-${__dirname}}/build.config";
+	if [[ -z "${GITHUB_ACTIONS:-}" ]]; then
+		read -p "Do you want to edit the configuration file? [y/N] " edit;
+		if [[ "${edit,,}" =~ ^y(es)?$ ]]; then
+			edit "${BUILDER_OUTPUT:-${__dirname}}/build.config";
+		fi
 	fi
 fi
 config "${BUILDER_OUTPUT:-${__dirname}}/build.config" "CONFIG_VENDOR CONFIG_FIRMWARE_PRODUCT_ID";
