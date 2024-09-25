@@ -34,7 +34,11 @@ This script allows you to build Padavan firmware on your local machine using Doc
     * Once the template is selected, you will have the option to edit the `build.config` file.
     * You can find a template config for your device in the [firmware repository](https://gitlab.com/hadzhioglu/padavan-ng/-/tree/master/trunk/configs/templates).
 
-4. **Run the script:**
+4. **(Optional) Add your custom scripts:**
+    * Create a file `pre_build.sh` to execute commands before building the firmware.
+    * Create a file `post_build.sh` to execute commands after building the firmware.
+
+5. **Run the script:**
 
     **Linux/WSL:**
     ```shell
@@ -45,7 +49,7 @@ This script allows you to build Padavan firmware on your local machine using Doc
     docker run -it --rm -v "${PWD}:/opt" -w /opt -e BUILDER_TEMP=/tmp registry.gitlab.com/hadzhioglu/padavan-ng ./build.sh
     ```
 
-5. **Get the firmware:**
+6. **Get the firmware:**
     * After a successful build, the compiled firmware will be located in the same directory where you ran the script.
 
 ### Updating the script
