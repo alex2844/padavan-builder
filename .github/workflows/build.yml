@@ -21,11 +21,15 @@ jobs:
 
     - name: Create post_build script
       run: |
-        echo '
-        for v in "${!CONFIG_@}" "${!FW_@}"; do
-          echo "$v=${!v}" >> $GITHUB_ENV
+        cat > post_build.sh <<'EOF'
+        #!/bin/sh
+        # Append CONFIG_* and FW_* environment variables to $GITHUB_ENV in a POSIX-safe way
+        for name in $(env | awk -F= '/^(CONFIG_|FW_)/ {print $1}'); do
+          val=$(printenv "$name")
+          printf '%s=%s\n' "$name" "$val" >> "$GITHUB_ENV"
         done
-        ' >> post_build.sh
+        EOF
+        chmod +x post_build.sh
 
     - name: Build firmware
       run: ./build.sh
