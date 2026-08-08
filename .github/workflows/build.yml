@@ -11,8 +11,8 @@ jobs:
       BUILDER_DEPENDENCIES: false
       BUILDER_CLEANUP: false
       BUILDER_RESET: false
-      # Point build.sh directly to your customized fork:
-      PADAVAN_REPO: https://github.com/devmujahidul/padavan-ng.git
+      # Use the upstream Padavan-ng repository for stable CI builds:
+      PADAVAN_REPO: https://gitlab.com/hadzhioglu/padavan-ng.git
       PADAVAN_BRANCH: master
 
     steps:
