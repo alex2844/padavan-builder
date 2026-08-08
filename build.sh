@@ -386,7 +386,12 @@ mv "padavan-ng/trunk/images/${FW_FILE_NAME}" "${BUILDER_OUTPUT:-${__dirname}}/";
 
 if [[ -f "post_build.sh" ]]; then
 	echo "Run custom post_build script...";
-	. post_build.sh
+	# Run with bash to support bash-only constructs; fall back to sourcing if bash not available
+	if command -v bash >/dev/null 2>&1; then
+		bash post_build.sh || true
+	else
+		. post_build.sh
+	fi
 fi
 
 echo "Checking firmware size...";
