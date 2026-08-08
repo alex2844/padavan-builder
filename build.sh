@@ -375,6 +375,8 @@ fi
 
 echo "Building firmware...";
 cexec cp "${BUILDER_OUTPUT:-${__dirname}}/build.config" "padavan-ng/trunk/.config";
+# Ensure XFS is disabled in the config to avoid VLA warnings treated as errors in kernel build
+cexec -w "padavan-ng/trunk" /bin/sh -c "sed -i 's/^CONFIG_FIRMWARE_ENABLE_XFS=.*/#CONFIG_FIRMWARE_ENABLE_XFS=y/' .config || true";
 cexec -w "padavan-ng/trunk" "./build_firmware.sh";
 
 echo "Moving firmware to the current directory...";
@@ -384,7 +386,12 @@ mv "padavan-ng/trunk/images/${FW_FILE_NAME}" "${BUILDER_OUTPUT:-${__dirname}}/";
 
 if [[ -f "post_build.sh" ]]; then
 	echo "Run custom post_build script...";
-	. post_build.sh
+	# Run with bash to support bash-only constructs; fall back to sourcing if bash not available
+	if command -v bash >/dev/null 2>&1; then
+		bash post_build.sh || true
+	else
+		. post_build.sh
+	fi
 fi
 
 echo "Checking firmware size...";
