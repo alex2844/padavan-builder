@@ -1,6 +1,7 @@
 name: Build firmware
 on:
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,8 +11,13 @@ jobs:
       BUILDER_DEPENDENCIES: false
       BUILDER_CLEANUP: false
       BUILDER_RESET: false
+      # Point build.sh directly to your customized fork:
+      PADAVAN_REPO: https://github.com/devmujahidul/padavan-ng.git
+      PADAVAN_BRANCH: main
+
     steps:
     - uses: actions/checkout@v4
+
     - name: Create post_build script
       run: |
         echo '
@@ -19,8 +25,10 @@ jobs:
           echo "$v=${!v}" >> $GITHUB_ENV
         done
         ' >> post_build.sh
+
     - name: Build firmware
       run: ./build.sh
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
