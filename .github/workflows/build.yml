@@ -13,7 +13,7 @@ jobs:
       BUILDER_RESET: false
       # Point build.sh directly to your customized fork:
       PADAVAN_REPO: https://github.com/devmujahidul/padavan-ng.git
-      PADAVAN_BRANCH: main
+      PADAVAN_BRANCH: master
 
     steps:
     - uses: actions/checkout@v4
