@@ -375,6 +375,8 @@ fi
 
 echo "Building firmware...";
 cexec cp "${BUILDER_OUTPUT:-${__dirname}}/build.config" "padavan-ng/trunk/.config";
+# Ensure XFS is disabled in the config to avoid VLA warnings treated as errors in kernel build
+cexec -w "padavan-ng/trunk" "sed -i 's/^CONFIG_FIRMWARE_ENABLE_XFS=.*/#CONFIG_FIRMWARE_ENABLE_XFS=y/' .config || true";
 cexec -w "padavan-ng/trunk" "./build_firmware.sh";
 
 echo "Moving firmware to the current directory...";
