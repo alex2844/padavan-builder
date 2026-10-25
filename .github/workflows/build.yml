@@ -12,6 +12,10 @@ jobs:
       BUILDER_RESET: false
     steps:
     - uses: actions/checkout@v4
+    - name: Install 32-bit multilib for LuaJIT
+      run: |
+        apt-get update
+        apt-get install -y --no-install-recommends gcc-multilib libc6-dev-i386
     - name: Create post_build script
       run: |
         echo '
